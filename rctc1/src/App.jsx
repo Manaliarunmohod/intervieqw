@@ -16,9 +16,11 @@ import axios from 'axios'
 function App() {
   const [data,setData]=useState([])
   const [btn, setBtn] = useState(false);
+  const [page,setpage]=useState(1);
+  const perpage=20;
   useEffect(()=>{
-    GetData()
-  },[])
+    GetData(page,setpage)
+  },[page,setpage])
   const handleOrder=()=>{
     const data_new = [...data];
     if(btn === false){
@@ -38,7 +40,12 @@ function App() {
   const GetData=()=>{
 
 
-    axios.get("https://json-server-mocker-masai.herokuapp.com/candidates").then(res=>{
+    axios.get("https://json-server-mocker-masai.herokuapp.com/candidates",{
+      method:"GET",
+            params:{
+                _page:page,_limit:perpage
+            }
+    }).then(res=>{
 
       setData(res.data)
       console.log(res.data)
@@ -68,6 +75,8 @@ function App() {
 
 
     <button onClick={handleOrder}>{btn===false? "Accending" : "Decending"}</button>
+    <button onClick={()=>setpage(page-1)} disabled={page===1}>prev</button>
+    <button onClick={()=>setpage(page+1)}>next</button>
     </div>
   )
 }
